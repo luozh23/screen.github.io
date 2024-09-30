@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>screen test</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.5s;
+            flex-direction: column;
+        }
+        #fullscreen-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button id="fullscreen-btn">全屏</button>
+    <script>
+        const colors = [
+            'rgb(0, 0, 0)',            
+            'rgb(255, 0, 0)',
+            'rgb(0, 255, 0)',
+            'rgb(0, 0, 255)',
+            'rgb(255, 255, 0)',
+            'rgb(0, 255, 255)',
+            'rgb(255, 0, 255)',
+            'rgb(255, 255, 255)'           
+        ];
+        let index = 0;
+        let isButtonClick = false; // 新增变量控制按钮点击
+
+        function changeColor() {
+            if (!isButtonClick) { // 如果不是按钮点击，则切换颜色
+                document.body.style.backgroundColor = colors[index];
+                index = (index + 1) % colors.length;
+            }
+            isButtonClick = false; // 重置按钮点击状态
+        }
+
+        document.addEventListener('click', changeColor);
+        window.addEventListener('load', changeColor); // 初始加载时设置颜色
+
+        const btn = document.getElementById('fullscreen-btn');
+
+        btn.addEventListener('click', (event) => {
+            isButtonClick = true; // 设置为按钮点击
+            event.stopPropagation(); // 阻止事件冒泡
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        });
+
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                btn.style.display = 'none'; // 进入全屏时隐藏按钮
+            } else {
+                btn.style.display = 'block'; // 退出全屏时显示按钮
+            }
+        });
+    </script>
+</body>
+</html>
